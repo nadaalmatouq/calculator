@@ -9,128 +9,186 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var pressedNum: String
     var body: some View {
         
         
         ZStack{
             
             
-            Color(.black)
-            
-            VStack(alignment: .center, spacing: 25){
+            Color(.black).edgesIgnoringSafeArea(.all)
+            ScrollView(.horizontal){
+            VStack{
                 
-                Text("555").font(.system(size: 100, weight: .thin)).foregroundColor(.white).padding(.leading,170)
+                Text(pressedNum).font(.system(size: 100, weight: .thin)).foregroundColor(.white)
                 
-                
-                
-                VStack{
+                FirstRow(buttonC: "C", pressedNum: $pressedNum)
                     
-                    horizantalCircle()
-                     horizantalCircle()
-                     horizantalCircle()
-                     horizantalCircle()
-                    
-                    lastRow()
-                    
-                    
-                }
-             
-            
+                RowMaker(pressedNum: $pressedNum, Num1: "7", Num2: "8", Num3: "9", Num4: "x")
                 
+                
+                RowMaker(pressedNum: $pressedNum, Num1: "5", Num2: "5", Num3: "6", Num4: "-")
+                            
+                    RowMaker(pressedNum: $pressedNum, Num1: "1", Num2: "2", Num3: "3", Num4: "+")
+                                        
+    
+                lastRow(pressedNum: $pressedNum)
+                    
                 
             }//VStack
-            
-            VStack(alignment: .center, spacing: 55){
-            
-            HStack(spacing: 70){
-               Text("C").font(.largeTitle).foregroundColor(.white)
-                 Text("±").font(.largeTitle).foregroundColor(.white)
-                 Text("%").font(.largeTitle).foregroundColor(.white)
-                 Text("÷").font(.largeTitle).foregroundColor(.white)
-                
-            }
-                HStack(spacing: 70){
-                              Text("7").font(.largeTitle).foregroundColor(.white)
-                                Text("8").font(.largeTitle).foregroundColor(.white)
-                                Text("9").font(.largeTitle).foregroundColor(.white)
-                                Text("x").font(.largeTitle).foregroundColor(.white)
-                               
-                           }
-                
-                HStack(spacing: 70){
-                              Text("4").font(.largeTitle).foregroundColor(.white)
-                                Text("5").font(.largeTitle).foregroundColor(.white)
-                                Text("6").font(.largeTitle).foregroundColor(.white)
-                                Text("-").font(.largeTitle).foregroundColor(.white)
-                               
-                           }
-                HStack(spacing: 70){
-                              Text("1").font(.largeTitle).foregroundColor(.white)
-                                Text("2").font(.largeTitle).foregroundColor(.white)
-                                Text("3").font(.largeTitle).foregroundColor(.white)
-                                Text("+").font(.largeTitle).foregroundColor(.white)
-                               
-                           }
-                HStack{
-                    Text("0").font(.largeTitle).foregroundColor(.white).padding(.leading,40).offset(x: -35)
-                    
-                    Text(".").font(.largeTitle).foregroundColor(.white).padding(.leading,50).offset(x: 25)
-                    Text("-").font(.largeTitle).foregroundColor(.white).padding(.leading,60).offset(x: 37)
-                                
-                               
-                           }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-            }.offset(y: 75)//VStack numbers
+            }//ScrollView
             
             
-            
-            
-            
-            
-        }.edgesIgnoringSafeArea(.all)
+            }.edgesIgnoringSafeArea(.all)//Ztack
         
         
       
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+
+struct Buttonn: View {
+    var buttonNum: String
+    @Binding var pressedNum: String
+    var body: some View {
+        
+            Button(action: {
+                
+                self.pressedNum = self.buttonNum
+                
+            }){
+                
+                Text(buttonNum).foregroundColor(.white).font(.system(size: 50))
+                
+                }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+     
     }
 }
 
-struct horizantalCircle: View {
-    var body: some View {
-        HStack{
-            Circle().fill(Color.gray).frame(width:85 , height:85)
-            Circle().fill(Color.gray).frame(width:85 , height:85)
-            Circle().fill(Color.gray).frame(width:85 , height:85)
-            Circle().fill(Color.orange).frame(width:85 , height:85)
-        }.padding(.horizontal,10)
-    }
-}
 
 struct lastRow: View {
+    
+    @Binding var pressedNum: String
+    var body: some View {
+        
+        HStack{
+            Button(action: {
+                
+                self.pressedNum = "0"
+                
+            }){
+                
+                Text("0").foregroundColor(.white).font(.system(size: 50))
+                
+                }.frame(width: 170, height: 85).background(Color.gray).clipShape(Capsule())//buttonBackground
+     
+        
+            
+            Button(action: {
+                       }){
+                           
+                           Text(".").foregroundColor(.white).font(.system(size: 50))
+                           
+                           }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+                
+            OrangeButton(buttonNum: "=")
+            
+            
+        }//HStack
+        
+        
+        
+    }
+}
+
+
+
+
+
+struct OrangeButton: View {
+    var buttonNum: String
+ 
+    var body: some View {
+        
+            Button(action: {
+                
+                
+                
+            }){
+                
+                Text(buttonNum).foregroundColor(.white).font(.system(size: 50))
+                
+                }.frame(width: 170, height: 85).background(Color.orange).clipShape(Circle())//buttonBackground
+     
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView(pressedNum: "0")
+    }
+}
+
+struct RowMaker: View {
+    @Binding var pressedNum: String
+    var Num1: String
+    var Num2: String
+    var Num3: String
+    var Num4: String
     var body: some View {
         HStack{
             
-            Capsule().fill(Color.gray).frame(width: 170, height: 85).padding(.leading,10)
-            Circle().fill(Color.gray).frame(width:85 , height:85)
-            Circle().fill(Color.orange).frame(width:85 , height:85)
+            Buttonn(buttonNum: Num1, pressedNum: $pressedNum)
+            Buttonn(buttonNum: Num2, pressedNum: $pressedNum)
+            Buttonn(buttonNum: Num3, pressedNum: $pressedNum)
+            OrangeButton(buttonNum: Num4)
+            
+            
+            
+        }
+    }
+}
+
+struct FirstRow: View {
+    var buttonC: String
+    @Binding var pressedNum: String
+    var body: some View {
+        HStack{
+            
+            
+            Button(action: {
+                
+                self.pressedNum = "0"
+               
+                
+            }){
+                
+                Text(buttonC).foregroundColor(.white).font(.system(size: 50))
+                
+            }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+            
+            Button(action: {
+                                 }){
+                                     
+                                     Text("+-").foregroundColor(.white).font(.system(size: 50))
+                                     
+                                     }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+            Button(action: {
+                                           }){
+                                               
+                                               Text("%").foregroundColor(.white).font(.system(size: 50))
+                                               
+                                               }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+            
+                          
+                      OrangeButton(buttonNum: "d")
+                      
             
             
             
             
-        }.padding(.trailing,10)
+            
+            
+        }
     }
 }
