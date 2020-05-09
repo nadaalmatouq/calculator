@@ -9,58 +9,66 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var pressedNum: String
+    @State var buttonC: String
+    @State var array :[String]
     var body: some View {
         
         
         ZStack{
             
             
-            Color(.black).edgesIgnoringSafeArea(.all)
-            ScrollView(.horizontal){
+            Color(.black).edgesIgnoringSafeArea(.vertical)
+            
             VStack{
                 
-                Text(pressedNum).font(.system(size: 100, weight: .thin)).foregroundColor(.white)
-                
-                FirstRow(buttonC: "C", pressedNum: $pressedNum)
+                HStack{
+                    Spacer()
                     
-                RowMaker(pressedNum: $pressedNum, Num1: "7", Num2: "8", Num3: "9", Num4: "x")
+                    Text(array.joined()).font(.system(size: 100, weight: .thin)).foregroundColor(.white)
+                    
+                    
+                }
+                
+            
+                
+                FirstRow(buttonC: $buttonC, array: $array)
+                    
+                RowMaker(buttonC: $buttonC, array: $array, Num1: "7", Num2: "8", Num3: "9", Num4: "x")
                 
                 
-                RowMaker(pressedNum: $pressedNum, Num1: "5", Num2: "5", Num3: "6", Num4: "-")
+                RowMaker(buttonC: $buttonC, array: $array,Num1: "4", Num2: "5", Num3: "6", Num4: "-")
                             
-                    RowMaker(pressedNum: $pressedNum, Num1: "1", Num2: "2", Num3: "3", Num4: "+")
+                RowMaker(buttonC: $buttonC, array: $array, Num1: "1", Num2: "2", Num3: "3", Num4: "+")
                                         
     
-                lastRow(pressedNum: $pressedNum)
+                lastRow(array: $array)
                     
                 
-            }//VStack
-            }//ScrollView
+            }.offset(y: 40)//VStack
             
-            
-            }.edgesIgnoringSafeArea(.all)//Ztack
-        
-        
-      
+            }.edgesIgnoringSafeArea(.vertical)//Ztack
     }
 }
 
 
 struct Buttonn: View {
+    @Binding var array: [String]
+    @Binding var buttonC: String
     var buttonNum: String
-    @Binding var pressedNum: String
+    
     var body: some View {
         
             Button(action: {
                 
-                self.pressedNum = self.buttonNum
+                self.array.append(self.buttonNum)
+                self.buttonC = "C"
+                
                 
             }){
                 
                 Text(buttonNum).foregroundColor(.white).font(.system(size: 50))
                 
-                }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+                }.frame(width: 80, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
      
     }
 }
@@ -68,17 +76,19 @@ struct Buttonn: View {
 
 struct lastRow: View {
     
-    @Binding var pressedNum: String
+    @Binding var array: [String]
     var body: some View {
         
         HStack{
             Button(action: {
                 
-                self.pressedNum = "0"
+             self.array.append("0")
                 
             }){
-                
-                Text("0").foregroundColor(.white).font(.system(size: 50))
+                HStack{
+                    Text("0").foregroundColor(.white).font(.system(size: 50)).padding(20).padding(.leading,20)
+                    Spacer()
+                }
                 
                 }.frame(width: 170, height: 85).background(Color.gray).clipShape(Capsule())//buttonBackground
      
@@ -89,21 +99,15 @@ struct lastRow: View {
                            
                            Text(".").foregroundColor(.white).font(.system(size: 50))
                            
-                           }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+            }.frame(width: 80, height: 85).background(Color.gray).clipShape(Circle()).padding(.leading,10)//buttonBackground
                 
-            OrangeButton(buttonNum: "=")
+            OrangeButton(buttonNum: "=").padding(.trailing,10)
             
             
         }//HStack
-        
-        
-        
+      
     }
 }
-
-
-
-
 
 struct OrangeButton: View {
     var buttonNum: String
@@ -111,26 +115,20 @@ struct OrangeButton: View {
     var body: some View {
         
             Button(action: {
-                
-                
-                
             }){
                 
                 Text(buttonNum).foregroundColor(.white).font(.system(size: 50))
                 
-                }.frame(width: 170, height: 85).background(Color.orange).clipShape(Circle())//buttonBackground
+                }.frame(width: 80, height: 85).background(Color.orange).clipShape(Circle())//buttonBackground
      
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(pressedNum: "0")
-    }
-}
+
 
 struct RowMaker: View {
-    @Binding var pressedNum: String
+      @Binding var buttonC: String
+    @Binding var array: [String]
     var Num1: String
     var Num2: String
     var Num3: String
@@ -138,9 +136,9 @@ struct RowMaker: View {
     var body: some View {
         HStack{
             
-            Buttonn(buttonNum: Num1, pressedNum: $pressedNum)
-            Buttonn(buttonNum: Num2, pressedNum: $pressedNum)
-            Buttonn(buttonNum: Num3, pressedNum: $pressedNum)
+            Buttonn(array: $array, buttonC: $buttonC, buttonNum: Num1)
+            Buttonn(array: $array, buttonC: $buttonC, buttonNum: Num2)
+            Buttonn(array: $array, buttonC: $buttonC, buttonNum: Num3)
             OrangeButton(buttonNum: Num4)
             
             
@@ -150,45 +148,45 @@ struct RowMaker: View {
 }
 
 struct FirstRow: View {
-    var buttonC: String
-    @Binding var pressedNum: String
+    @Binding var buttonC: String
+      @Binding var array: [String]
+   
     var body: some View {
         HStack{
             
             
             Button(action: {
                 
-                self.pressedNum = "0"
-               
-                
+                self.array.removeAll()
+                self.buttonC = "AC"
+                self.array.append("0")
             }){
+              
+                Text(buttonC).foregroundColor(.white).font(.system(size: 40))
                 
-                Text(buttonC).foregroundColor(.white).font(.system(size: 50))
-                
-            }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+            }.frame(width: 80, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
             
             Button(action: {
                                  }){
                                      
-                                     Text("+-").foregroundColor(.white).font(.system(size: 50))
+                                     Text("±").foregroundColor(.white).font(.system(size: 50))
                                      
-                                     }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+                                     }.frame(width: 80, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
             Button(action: {
                                            }){
                                                
                                                Text("%").foregroundColor(.white).font(.system(size: 50))
                                                
-                                               }.frame(width: 170, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
+                                               }.frame(width: 80, height: 85).background(Color.gray).clipShape(Circle())//buttonBackground
             
-                          
-                      OrangeButton(buttonNum: "d")
-                      
-            
-            
-            
-            
-            
+                      OrangeButton(buttonNum: "÷")
             
         }
+    }
+}
+struct ContentView_Previews: PreviewProvider {
+      
+    static var previews: some View {
+        ContentView(buttonC: "C", array: ["0"])
     }
 }
